@@ -1,0 +1,21 @@
+@if(user()){
+    <table>
+        <tr>
+            <th>Id</th> <td>{{user()?.id}}</td>
+        </tr>
+        <tr>
+            <th>Username</th> <td>{{user()?.username}}</td>
+        </tr>
+        <tr>
+            <th>First name</th> <td>{{user()?.firstName}}</td>
+        </tr>
+        <tr>
+            <th>Last Name</th> <td>{{user()?.lastName}}</td>
+        </tr>
+    </table>
+    
+}
+
+@else{
+  Not user Found  
+}
