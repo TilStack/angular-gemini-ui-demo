@@ -1,11 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hello World</h1>
-</body>
-</html>
+@switch (message().messageType) {
+    @case (messageType.BOT_MESSAGE) {
+        <div class="chat response">
+            <img src="../assets/img/angular-gemini.png">
+            <p>
+                {{ message().message }}
+            </p>
+        </div>
+    }
+    @case (messageType.USER_MESSAGE) {
+        <div class="chat message">
+            <img src="../../../assets/img/aguekeng.png">
+            <p>
+                {{ message().message }}
+            </p>
+        </div>
+    }
+    @case (messageType.ERROR_MESSAGE) {
+        <div class="chat error">
+            <img src="../assets/img/angular-gemini.png">
+            <p>
+                {{ message().message }}
+            </p>
+        </div>
+    }
+}

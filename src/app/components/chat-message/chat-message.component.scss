@@ -12,3 +12,40 @@
     width: 35px;
     height: 35px;
   }
+  .response{
+    background-color: #494b59;
+  }
+
+  .error{
+    background-color: #ff8b8ba5;
+  }
+
+
+
+  /* text writing animation */
+/* Google Fonts */
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+
+/* Global */
+.line-1{
+    position: relative;
+    top: 50%;  
+    border-right: 2px solid rgba(255,255,255,.75);
+    white-space: nowrap;
+    overflow: hidden;
+    transform: translateY(-50%);    
+}
+
+/* Animation */
+.anim-typewriter{
+  animation: typewriter 4s  1s 1 normal both,
+             blinkTextCursor 500ms  infinite normal;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 24em;}
+}
+@keyframes blinkTextCursor{
+  from{border-right-color: rgba(255,255,255,.75);}
+  to{border-right-color: transparent;}
+}
