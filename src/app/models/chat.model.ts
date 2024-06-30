@@ -23,4 +23,6 @@ export enum MessageType {
   BOT_MESSAGE,
   USER_MESSAGE,
   ERROR_MESSAGE,
+  INFO_MESSAGE,
+  LOADING_MESSAGE,
 }

@@ -3,7 +3,7 @@
         <div class="chat response">
             <img src="../assets/img/angular-gemini.png">
             <p>
-                {{ message().message }}
+                {{ message().message | aiTextFormat }}
             </p>
         </div>
     }
@@ -20,6 +20,16 @@
             <img src="../assets/img/angular-gemini.png">
             <p>
                 {{ message().message }}
+            </p>
+        </div>
+    }
+    @case (messageType.LOADING_MESSAGE) {
+        <div class="chat loading">
+            <img src="../assets/img/angular-gemini.png">
+            &nbsp;
+            &nbsp;
+            <p>
+                <span class="loader"></span>
             </p>
         </div>
     }

@@ -22,18 +22,35 @@
       @for (message of chatMessages; track $index) {
       <app-chat-message [message]="message"></app-chat-message>
       }
+      
     </div>
+    <style>
+            input[type="file"] {
+        display: none;
+      }
+    </style>
     <div class="messagebar">
-      <div class="bar-wrapper">
+
+      <div class="bar-wrapper"> 
+        <input type="file" id="image" (change)="onImageSelected($event)" style="cursor: pointer;">        
+        @if (imageUrl) {
+          <img [src]="imageUrl" alt="Uploaded Image" width="80px">
+        }
         <input
-          type="text"
+          type="text" 
           placeholder="Enter your message..."
           [(ngModel)]="currentChatItem.message"
         />
-        <button (click)="onSend()">
-          <span class="material-symbols-rounded"> send </span>
-        </button>
+        <div style="display: flex; gap: 16px">
+          <button style="cursor: pointer;">
+            <label for="image" class="material-symbols-rounded"> photo </label>
+          </button>
+          <button (click)="onSend()" style="cursor: pointer;">
+            <span class="material-symbols-rounded"> send </span>
+          </button>
+        </div>
       </div>
+      
     </div>
   </div>
 </div>

@@ -1,17 +1,11 @@
-import {
-  Component,
-  ElementRef,
-  afterNextRender,
-  afterRender,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ChatMessageComponent } from './components/chat-message/chat-message.component';
 import { ChatModel, MessageType } from './models/chat.model';
-import { ServerModule } from '@angular/platform-server';
 import { GeminiService } from './services/gemini.service';
+import { HighlightAuto } from 'ngx-highlightjs';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -20,18 +14,36 @@ import { GeminiService } from './services/gemini.service';
     FormsModule,
     UserDetailsComponent,
     ChatMessageComponent,
+    HighlightAuto
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
   constructor(private gemini: GeminiService) {}
+  isLoading = false;
   chatMessages: ChatModel[] = [];
+  code = ` <!DOCTYPE html>
+  <html>
+  <title>HTML Tutorial</title>
+  <body>
+  
+  <h1>This is a heading</h1>
+  <p>This is a paragraph.</p>
+  
+  </body>
+  </html>`;
   currentChatItem: ChatModel = new ChatModel(
     '',
     new Date(),
     '',
     MessageType.BOT_MESSAGE
+  );
+  loadingChatItem: ChatModel = new ChatModel(
+    '',
+    new Date(),
+    '',
+    MessageType.LOADING_MESSAGE
   );
   userId: number | null = null;
 
@@ -40,36 +52,83 @@ export class AppComponent {
   }
 
   onSend() {
-    if (this.currentChatItem.message != '') {
-      this.currentChatItem.time = new Date();
+    this.currentChatItem.time = new Date();
+    alert(this.currentChatItem.message);
+    var newCurrentChat = new ChatModel(
+      this.currentChatItem.message,
+      new Date(),
+      'pict',
+      MessageType.USER_MESSAGE
+    );
+    this.addChatMessage(newCurrentChat);
 
-      var newCurrentChat = new ChatModel(
-        this.currentChatItem.message,
-        new Date(),
-        'pict',
-        MessageType.USER_MESSAGE
-      );
-      this.addChatMessage(newCurrentChat);
-      var messages = [];
-      for (let chat of this.chatMessages) {
-        messages.push({
-          text: chat.message,
+    if (this.imageUrl) {
+      this.addChatMessage(this.loadingChatItem);
+      this.gemini
+        .generateTextByImage(this.selectedImage!, newCurrentChat.message)
+        .then((data) => {
+          // this.addChatMessage(this.loadingChatItem);
+          // try{
+          //   this.chatMessages.pop()
+          //   var finalData = data.subscribe(data =>{
+          //     this.currentChatItem.message = data.response.text()
+          //     this.addChatMessage(this.currentChatItem) 
+          //   })
+          // }
+          // catch{
+          //   this.chatMessages.pop()
+          //   this.currentChatItem.messageType = MessageType.ERROR_MESSAGE
+          //   this.currentChatItem.message = "An error occured try again"
+          //   this.addChatMessage(this.currentChatItem)
+          // }
+
+          alert(data);
+         
+        })
+        .catch((e) => {
+          alert(e.message);
         });
-      }
-      this.gemini.generateText(messages).subscribe((data) => {
-        var filterData = data['candidates'][0]['content']['parts'][0]['text'];
-        this.currentChatItem.message = filterData;
-        var currentBotChat = new ChatModel(
-          this.currentChatItem.message,
-          new Date(),
-          'pict',
-          MessageType.BOT_MESSAGE
-        );
-        this.addChatMessage(currentBotChat);
-        this.currentChatItem.message = '';
-      });
+    } else {
+      this.addChatMessage(this.loadingChatItem);
+      this.gemini
+        .generateText(newCurrentChat.message)
+        .then((data) => {
+          var filterData = data.response.text();
+          this.currentChatItem.message = filterData;
+          var currentBotChat = new ChatModel(
+            this.currentChatItem.message,
+            new Date(),
+            'pict',
+            MessageType.BOT_MESSAGE
+          );
+          this.chatMessages.pop();
+          this.addChatMessage(currentBotChat);
+          this.gemini.chatHistory.push({
+            role: 'model',
+            parts: [{ text: this.currentChatItem.message }],
+          });
+          
+          this.currentChatItem.message = '';
+        })
+        .catch((error) => {
+          console.error('Promise rejected with error: ' + error);
+        });
+    }
 
-      this.currentChatItem.message = '';
+    this.currentChatItem.message = '';
+  }
+
+  selectedImage: File | null = null;
+  imageUrl: string | null = null;
+  onImageSelected(event: any) {
+    this.selectedImage = event.target.files[0];
+
+    if (this.selectedImage) {
+      const objectURL = URL.createObjectURL(this.selectedImage);
+      this.imageUrl = objectURL;
     }
   }
 }
+
+
+
