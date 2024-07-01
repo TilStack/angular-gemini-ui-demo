@@ -22,6 +22,7 @@ export class ChatModel {
 export enum MessageType {
   BOT_MESSAGE,
   USER_MESSAGE,
+  USER_IMAGE_MESSAGE,
   ERROR_MESSAGE,
   INFO_MESSAGE,
   LOADING_MESSAGE,

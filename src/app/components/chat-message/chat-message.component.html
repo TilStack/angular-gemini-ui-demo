@@ -33,4 +33,16 @@
             </p>
         </div>
     }
+    @case (messageType.USER_IMAGE_MESSAGE) {
+        <div class="chat message">
+            <img src="../../../assets/img/aguekeng.png">
+            <p>
+                <img [src]="message().picture" alt="Uploaded Image">
+                <br>
+                <label>
+                    {{ message().message }}
+                </label>
+            </p>
+        </div>
+    }
 }

@@ -14,7 +14,7 @@ import { HighlightAuto } from 'ngx-highlightjs';
     FormsModule,
     UserDetailsComponent,
     ChatMessageComponent,
-    HighlightAuto
+    HighlightAuto,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -23,16 +23,6 @@ export class AppComponent {
   constructor(private gemini: GeminiService) {}
   isLoading = false;
   chatMessages: ChatModel[] = [];
-  code = ` <!DOCTYPE html>
-  <html>
-  <title>HTML Tutorial</title>
-  <body>
-  
-  <h1>This is a heading</h1>
-  <p>This is a paragraph.</p>
-  
-  </body>
-  </html>`;
   currentChatItem: ChatModel = new ChatModel(
     '',
     new Date(),
@@ -53,40 +43,34 @@ export class AppComponent {
 
   onSend() {
     this.currentChatItem.time = new Date();
-    alert(this.currentChatItem.message);
     var newCurrentChat = new ChatModel(
       this.currentChatItem.message,
       new Date(),
-      'pict',
-      MessageType.USER_MESSAGE
+      this.selectedImage !=null  ? this.imageUrl! : '',
+      this.selectedImage !=null ? MessageType.USER_IMAGE_MESSAGE : MessageType.USER_MESSAGE
     );
+    
+    var imageCopy = this.selectedImage;
+    this.removeImage();
     this.addChatMessage(newCurrentChat);
-
-    if (this.imageUrl) {
+    
+    if (imageCopy) {
       this.addChatMessage(this.loadingChatItem);
       this.gemini
-        .generateTextByImage(this.selectedImage!, newCurrentChat.message)
+        .generateTextByImage(imageCopy, newCurrentChat.message)
         .then((data) => {
-          // this.addChatMessage(this.loadingChatItem);
-          // try{
-          //   this.chatMessages.pop()
-          //   var finalData = data.subscribe(data =>{
-          //     this.currentChatItem.message = data.response.text()
-          //     this.addChatMessage(this.currentChatItem) 
-          //   })
-          // }
-          // catch{
-          //   this.chatMessages.pop()
-          //   this.currentChatItem.messageType = MessageType.ERROR_MESSAGE
-          //   this.currentChatItem.message = "An error occured try again"
-          //   this.addChatMessage(this.currentChatItem)
-          // }
-
-          alert(data);
-         
+          try {
+            this.addBotBull(data);
+          } catch (e) {
+            this.chatMessages.pop();
+            this.currentChatItem.messageType = MessageType.ERROR_MESSAGE;
+            this.currentChatItem.message = 'An error occured try again';
+            this.addChatMessage(this.currentChatItem);
+            console.error(e);
+          }
         })
         .catch((e) => {
-          alert(e.message);
+          console.error('Promise rejected with error: ' + e);
         });
     } else {
       this.addChatMessage(this.loadingChatItem);
@@ -94,21 +78,7 @@ export class AppComponent {
         .generateText(newCurrentChat.message)
         .then((data) => {
           var filterData = data.response.text();
-          this.currentChatItem.message = filterData;
-          var currentBotChat = new ChatModel(
-            this.currentChatItem.message,
-            new Date(),
-            'pict',
-            MessageType.BOT_MESSAGE
-          );
-          this.chatMessages.pop();
-          this.addChatMessage(currentBotChat);
-          this.gemini.chatHistory.push({
-            role: 'model',
-            parts: [{ text: this.currentChatItem.message }],
-          });
-          
-          this.currentChatItem.message = '';
+          this.addBotBull(filterData);
         })
         .catch((error) => {
           console.error('Promise rejected with error: ' + error);
@@ -128,7 +98,30 @@ export class AppComponent {
       this.imageUrl = objectURL;
     }
   }
+
+  // remove image
+
+  removeImage() {
+    this.selectedImage = null;
+    this.imageUrl = null;
+  }
+
+  addBotBull(data: any) {
+    this.currentChatItem.message = data;
+    var currentBotChat = new ChatModel(
+      this.currentChatItem.message,
+      new Date(),
+      "pict",
+      MessageType.BOT_MESSAGE
+    );
+    this.chatMessages.pop();
+    this.addChatMessage(currentBotChat);
+    this.gemini.chatHistory.push({
+      role: 'model',
+      parts: [{ text: this.currentChatItem.message }],
+    });
+    this.removeImage();
+    this.currentChatItem.message = '';
+  }
+
 }
-
-
-

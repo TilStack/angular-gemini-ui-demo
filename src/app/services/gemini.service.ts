@@ -2,16 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { Content, GoogleGenerativeAI, Part } from '@google/generative-ai';
+import { FileConversionService } from './file-conversion.service';
 @Injectable({
   providedIn: 'root',
 })
 export class GeminiService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private fileConversionService: FileConversionService) {}
+  isStreaming = false;
   apikey = 'AIzaSyDiNrEgQOfR7-Pe2yp44ecS0Lqix8qzAdM';
-  url =
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${this.apikey}`;
   genAI = new GoogleGenerativeAI(this.apikey);
-  model = this.genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+  imageModel = this.genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+  textModel = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
   promptContext = 'tu es un developpeur senior';
   chatHistory: {
     role: string;
@@ -40,7 +41,7 @@ export class GeminiService {
       test.push(item);
     }
 
-    const chat = this.model.startChat({
+    const chat = this.textModel.startChat({
       history: test,
       generationConfig: {
         maxOutputTokens: 100,
@@ -53,39 +54,61 @@ export class GeminiService {
     return chat.sendMessage(prompt);
   }
 
-  toBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
+   async generateTextByImage(file: File, promptText: string) : Promise<any> {
+    try {
+      let imageBase64 = await this.fileConversionService.convertToBase64(
+        URL.createObjectURL(file)
+      );
+    
+      // Check for successful conversion to Base64
+      if (typeof imageBase64 !== 'string') {
+        console.error('Image conversion to Base64 failed.');
+        return;
+      }
+      // Model initialisation missing for brevity
+      let prompt = [
+        {
+          inlineData: {
+            mimeType: 'image/jpeg',
+            data: imageBase64,
+          },
+        },
+        {
+          text: promptText,
+        },
+      ];
+      const result = await this.imageModel.generateContent(prompt);
+      const response = await result.response;
+      console.log(response.text());
+      return response.text();
+    } catch (error) {
+      console.error('Error converting file to Base64', error);
+      return null;
+    }
   }
 
-  // async fileToGenerativePart(path: any, mimeType: any, image: File): Promise<any> {
-  //   let data = await this.toBase64(image)
-  //   return {
-  //     inlineData: {
-  //       data: data,
-  //       mimeType,
-  //     },
-  //   };
-  // }
 
-  async generateTextByImage(image: File, prompt: string){
-    let data : string = await this.toBase64(image)
+  async geminiProStreaming( promptText: string) {
+    // Model initialisation missing for brevity
     
-
-    const imagePrompt: Part = {
-      inlineData: {
-        data: data /* see JavaScript quickstart for details */,
-        mimeType: "image/png",
-      },
+    const prompt = {
+      contents: [
+        {
+          role: 'user',
+          parts: [
+            {
+              text: promptText,
+            },
+          ],
+        },
+      ],
     };
-    alert(imagePrompt.inlineData.data) 
-    console.log(imagePrompt.inlineData.data)
-    const result = await this.model.generateContent([prompt, data]);
-    console.log(result.response.text());
-    alert(result.response.text());
+    const streamingResp = await this.textModel.generateContentStream(prompt);
+    for await (const item of streamingResp.stream) {
+      console.log('stream chunk: ' + item.text());
+
+
+    }
+    console.log('aggregated response: ' + (await streamingResp.response).text());
   }
 }

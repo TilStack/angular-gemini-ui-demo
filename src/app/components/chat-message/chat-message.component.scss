@@ -12,6 +12,16 @@
     width: 35px;
     height: 35px;
   }
+
+  .chat{
+    p{
+      img{
+        width: 135px;
+        height: 135px;
+        object-fit: contain;
+      }
+    }
+  }
   .response{
     background-color: #494b59;
   }
