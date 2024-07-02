@@ -20,10 +20,17 @@
     </nav>
     <div class="chatbox-wrapper">
       <div class="message-box">
+       @if (chatMessages.length >= 0) {
         @for (message of chatMessages; track $index) {
-        <app-chat-message [message]="message"></app-chat-message>
-        }
-        
+          <app-chat-message [message]="message"></app-chat-message>
+          }
+       }
+       @else {
+          <p class="welcome-text">
+            welcome-text
+          </p>
+       }
+         
       </div>
       <style>
               input[type="file"] {
@@ -31,7 +38,6 @@
         }
       </style>
       <div class="messagebar">
-  
         <div class="bar-wrapper"> 
           <input type="file" id="image" (change)="onImageSelected($event)" style="cursor: pointer;">        
           @if (imageUrl) {
@@ -50,7 +56,6 @@
             </button>
           </div>
         </div>
-         
       </div>
     </div>
   </div>

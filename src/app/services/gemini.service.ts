@@ -9,6 +9,7 @@ import { FileConversionService } from './file-conversion.service';
 export class GeminiService {
   constructor(private http: HttpClient, private fileConversionService: FileConversionService) {}
   isStreaming = false;
+  stramingResponse: any;
   apikey = 'AIzaSyDiNrEgQOfR7-Pe2yp44ecS0Lqix8qzAdM';
   genAI = new GoogleGenerativeAI(this.apikey);
   imageModel = this.genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
@@ -106,6 +107,8 @@ export class GeminiService {
     const streamingResp = await this.textModel.generateContentStream(prompt);
     for await (const item of streamingResp.stream) {
       console.log('stream chunk: ' + item.text());
+
+      this.stramingResponse = item.text();
 
 
     }

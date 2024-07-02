@@ -16,8 +16,8 @@
   .chat{
     p{
       img{
-        width: 135px;
-        height: 135px;
+        width: 200px;
+        height: 200px;
         object-fit: contain;
       }
     }
@@ -91,5 +91,26 @@
     }
     100% {
       box-shadow: -38px 6px, -14px -6px, 14px 6px;
+    }
+  }
+
+  /* Responsive */
+  @media screen and (max-width: 768px) {
+    .chat {
+      padding: 25px 10px;
+      
+    }
+  
+    .messagebar .bar-wrapper {
+        padding: 16px;
+        margin: 16px;
+      width: 100%;
+    }
+
+    .response, .error, .message{
+      width: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
     }
   }

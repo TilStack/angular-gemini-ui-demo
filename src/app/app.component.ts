@@ -46,14 +46,16 @@ export class AppComponent {
     var newCurrentChat = new ChatModel(
       this.currentChatItem.message,
       new Date(),
-      this.selectedImage !=null  ? this.imageUrl! : '',
-      this.selectedImage !=null ? MessageType.USER_IMAGE_MESSAGE : MessageType.USER_MESSAGE
+      this.selectedImage != null ? this.imageUrl! : '',
+      this.selectedImage != null
+        ? MessageType.USER_IMAGE_MESSAGE
+        : MessageType.USER_MESSAGE
     );
-    
+
     var imageCopy = this.selectedImage;
     this.removeImage();
     this.addChatMessage(newCurrentChat);
-    
+
     if (imageCopy) {
       this.addChatMessage(this.loadingChatItem);
       this.gemini
@@ -72,7 +74,13 @@ export class AppComponent {
         .catch((e) => {
           console.error('Promise rejected with error: ' + e);
         });
-    } else {
+    } else if (this.gemini.isStreaming == true) {
+      this.addChatMessage(this.loadingChatItem);
+      this.gemini.geminiProStreaming(newCurrentChat.message).then((data) => {
+        this.addBotBull(this.gemini.stramingResponse);
+      });
+    } 
+    else {
       this.addChatMessage(this.loadingChatItem);
       this.gemini
         .generateText(newCurrentChat.message)
@@ -111,7 +119,7 @@ export class AppComponent {
     var currentBotChat = new ChatModel(
       this.currentChatItem.message,
       new Date(),
-      "pict",
+      'pict',
       MessageType.BOT_MESSAGE
     );
     this.chatMessages.pop();
@@ -123,5 +131,4 @@ export class AppComponent {
     this.removeImage();
     this.currentChatItem.message = '';
   }
-
 }
