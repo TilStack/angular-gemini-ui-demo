@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
@@ -20,7 +20,7 @@ import { HighlightAuto } from 'ngx-highlightjs';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  constructor(private gemini: GeminiService) {}
+  constructor(private gemini: GeminiService,private renderer: Renderer2, private el: ElementRef) {}
   isLoading = false;
   chatMessages: ChatModel[] = [];
   currentChatItem: ChatModel = new ChatModel(

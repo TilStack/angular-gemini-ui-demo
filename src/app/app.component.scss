@@ -14,7 +14,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-top: 1px solid #494b59;
   background-color: #33343f;
   flex-direction: column;
   p {
@@ -28,7 +27,7 @@
 
 .messagebar .bar-wrapper {
   background-color: #494b59;
-  border-radius: 10px;
+  border-radius: 30px;
   width: 50vw;
   padding: 16px;
   display: flex;
@@ -38,18 +37,23 @@
 
 .bar-wrapper textarea {
   width: 100%;
+  height: 100%;
   padding: 5px;
   border: none;
   outline: none;
   font-size: 14px;
   background: none;
   color: #ccc;
-  min-height: 40px;
+  min-height: 30px;
+  resize: vertical;
+  height: 30px;
+  max-height: 400px;
 }
 
 .bar-wrapper input::placeholder {
   color: #ccc;
 }
+
 
 .messagebar button {
   display: flex;
@@ -61,6 +65,19 @@
   cursor: pointer;
 }
 
+button label{
+  cursor: pointer;
+}
+
+button label:hover{
+  background: linear-gradient(16deg, #4285f4, #d96570, #4285f4);
+  background-size: 400% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transform: translateX(1%);
+}
+
 .message-box {
   margin-top: 6rem;
   height: calc(100vh - 10rem);
@@ -69,6 +86,7 @@
   align-items: center;
   flex-direction: column;
   margin-bottom: 300px;
+  animation: gradientShift 2s ease infinite;
 }
 
 nav {
@@ -97,14 +115,58 @@ nav {
   .messagebar .bar-wrapper {
     padding: 16px;
     margin: 16px;
-    width: 100%;
+    width: 98%;
   }
+
+}
+.image-container {
+  position: relative;
+  display: inline-block; /* Or 'block' depending on your layout */
+}
+
+.remove-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  /* Additional styling for the button as needed */
 }
 
 .welcome-text {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
   color: red;
+  background: linear-gradient(16deg, #4285f4, #d96570, #4285f4);
+  background-size: 400% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-size: 60px;
-  margin-top: 400px;
+  // Removed margin-top as it conflicts with centering
+  animation: gradientShift 8s ease infinite;
+
+  // Centering adjustments
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100vw; // Ensure it spans the full viewport width
+  height: 100vh; // Ensure it spans the full viewport height
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* loader */
@@ -144,6 +206,9 @@ nav {
   .messagebar .bar-wrapper {
     padding: 16px;
     margin: 16px;
-    width: 100%;
+    width: 95%;
+  }
+  .welcome-text{
+    font-size: 30px;
   }
 }

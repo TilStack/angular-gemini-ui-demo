@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, of, tap } from 'rxjs';
 import { Content, GoogleGenerativeAI, Part } from '@google/generative-ai';
 import { FileConversionService } from './file-conversion.service';
+import { environment } from '../../environments/environment'; // Adjust the path as necessary
+
 @Injectable({
   providedIn: 'root',
 })
@@ -10,7 +12,7 @@ export class GeminiService {
   constructor(private http: HttpClient, private fileConversionService: FileConversionService) {}
   isStreaming = false;
   stramingResponse: any;
-  apikey = 'AIzaSyDiNrEgQOfR7-Pe2yp44ecS0Lqix8qzAdM';
+  apikey = environment.apikey; 
   genAI = new GoogleGenerativeAI(this.apikey);
   imageModel = this.genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
   textModel = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
