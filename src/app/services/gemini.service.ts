@@ -9,10 +9,13 @@ import { environment } from '../../environments/environment'; // Adjust the path
   providedIn: 'root',
 })
 export class GeminiService {
-  constructor(private http: HttpClient, private fileConversionService: FileConversionService) {}
+  constructor(
+    private http: HttpClient,
+    private fileConversionService: FileConversionService
+  ) {}
   isStreaming = false;
   stramingResponse: any;
-  apikey = environment.apikey; 
+  apikey = environment.apikey;
   genAI = new GoogleGenerativeAI(this.apikey);
   imageModel = this.genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
   textModel = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
@@ -57,12 +60,12 @@ export class GeminiService {
     return chat.sendMessage(prompt);
   }
 
-   async generateTextByImage(file: File, promptText: string) : Promise<any> {
+  async generateTextByImage(file: File, promptText: string): Promise<any> {
     try {
       let imageBase64 = await this.fileConversionService.convertToBase64(
         URL.createObjectURL(file)
       );
-    
+
       // Check for successful conversion to Base64
       if (typeof imageBase64 !== 'string') {
         console.error('Image conversion to Base64 failed.');
@@ -90,10 +93,8 @@ export class GeminiService {
     }
   }
 
-
-  async geminiProStreaming( promptText: string) {
+  async geminiProStreaming(promptText: string) {
     // Model initialisation missing for brevity
-    
     const prompt = {
       contents: [
         {
@@ -111,9 +112,9 @@ export class GeminiService {
       console.log('stream chunk: ' + item.text());
 
       this.stramingResponse = item.text();
-
-
     }
-    console.log('aggregated response: ' + (await streamingResp.response).text());
+    console.log(
+      'aggregated response: ' + (await streamingResp.response).text()
+    );
   }
 }

@@ -1,39 +1,59 @@
-.chat{
-    display: flex;
-    gap: 20px;
-    padding: 25px ;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 300;
-    width: 50vw;
-  }
-  
-  .chat img{
-    width: 35px;
-    height: 35px;
-  }
+/* General Chat Block Styles */
+.chat {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: start;
+}
 
-  .chat{
-    p{
-      img{
-        width: 200px;
-        height: 200px;
-        object-fit: contain;
-      }
-    }
-  }
-  .response{
-    background-color: #494b59;
-  }
+.chat p {
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+}
 
-  .error{
-    background-color: #ff8b8ba5;
-  }
-  .loading{
-    background-color: none;
-    
-  }
 
+
+/* Bot Message Styles */
+.chat.response {
+  align-self: flex-start;
+  background-color: #1e1e1ea3; /* Dark background */
+  color: #ffffff; /* White text */
+  width: 100%;
+  border-radius: 15px;
+}
+
+/* User Message Styles */
+.chat.message {
+  display: flex;
+  color: #ffffff; /* White text */
+  width: 100%;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.chat.message img {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+}
+
+.chat.message p {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+/* Error Message Styles */
+.chat.error {
+  align-self: flex-start;
+  background-color: #ff4c4c; /* Red background */
+  color: #ffffff; /* White text */
+}
 
 
   /* text writing animation */
@@ -108,9 +128,33 @@
     }
 
     .response, .error, .message{
-      width: 100%;
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
     }
   }
+
+
+
+  .variable-binding,
+.variable-textarea {
+  width: 100%;
+}
+
+.variable-textarea {
+  border-radius: 15px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.07);
+  min-height: 420px;
+  padding: 8px;
+  transition: all 300ms ease-out;
+}
+
+.variable-textarea:hover {
+  box-shadow: 0 6px 12px 3px rgba(0,0,0,.09),
+    0 2px 3px 1px rgba(0,0,0,.06);
+}
+
+.variable-binding {
+  display: block;
+  float: right;
+}

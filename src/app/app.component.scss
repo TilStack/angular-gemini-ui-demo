@@ -3,7 +3,7 @@
   padding: 0;
   width: 100%;
   height: 100vh;
-  background-color: #33343f;
+  background-color: #131314;
 }
 
 .messagebar {
@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #33343f;
+  background-color: #131314;
   flex-direction: column;
   p {
     color: white;
@@ -26,7 +26,7 @@
 }
 
 .messagebar .bar-wrapper {
-  background-color: #494b59;
+  background-color: #292a31;
   border-radius: 30px;
   width: 50vw;
   padding: 16px;
@@ -77,14 +77,22 @@ button label:hover{
   -webkit-text-fill-color: transparent;
   transform: translateX(1%);
 }
+.chatbox-wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .message-box {
   margin-top: 6rem;
   height: calc(100vh - 10rem);
   overflow-y: auto;
   display: flex;
-  align-items: center;
+  align-items: start;
   flex-direction: column;
+  width: 50vw;
+  padding: 16px;
   margin-bottom: 300px;
   animation: gradientShift 2s ease infinite;
 }
@@ -94,7 +102,7 @@ nav {
   top: 0;
   width: 100%;
   height: 100px;
-  background-color: rgb(30, 30, 30);
+  background-color: #131314;
   color: white;
   margin-bottom: 20px;
   display: flex;
