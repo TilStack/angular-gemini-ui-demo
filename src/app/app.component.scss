@@ -86,15 +86,17 @@ button label:hover{
 
 .message-box {
   margin-top: 6rem;
+  margin-bottom: 6rem;
   height: calc(100vh - 10rem);
   overflow-y: auto;
   display: flex;
   align-items: start;
   flex-direction: column;
-  width: 50vw;
-  padding: 16px;
+  width: 60%;
+  padding: 20px;
   margin-bottom: 300px;
   animation: gradientShift 2s ease infinite;
+  position: fixed;
 }
 
 nav {

@@ -39,6 +39,7 @@ export class AppComponent {
 
   addChatMessage(message: ChatModel) {
     this.chatMessages.push(message);
+    window.scrollTo(0, 0);
   }
 
   onSend() {
@@ -130,5 +131,6 @@ export class AppComponent {
     });
     this.removeImage();
     this.currentChatItem.message = '';
+    window.scrollTo(0, 0);
   }
 }
